@@ -6,14 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="https://unpkg.com/vue@next"></script>
-  <style>
-    div {
-      border: 2px solid red;
-    }
-    p {
-      border: 2px solid blue;
-    }
-  </style>
 </head>
 <body>
   <div id="app">
@@ -22,28 +14,33 @@
     <div @click="increase(20)">
       <p @click.stop="some">결과: {{number}}</p>
     </div>
+    <br/><br/><br/><br/>
+    <input @keyup.ctrl.enter="setName($event)" type="text">
+    <p>{{ myName }}</p>
   </div>
-
+ 
   <script>
-    const instance = Vue.createApp({
+    Vue.createApp({
       data () {
         return {
           myNum: 13,
           number: 100,
+          myName: '',
         }
       },
       methods: {
         increase(num, event) {
           this.number += num;
-          // console.log(event.target);
         },
         decrease(event, num) {
           this.number -= num;
-          console.log(event.target);
         },
         some(event) {
           console.log('some');
         },
+        setName(event) {
+          this.myName = event.target.value;
+        }
       },
     }).mount('#app')
   </script>
