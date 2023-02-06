@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>Document</title>
+    <style>
+      #app {
+        border: 2px solid red;
+        display: flex;
+      }
+      .text {
+        width: 150px;
+        height: 150px;
+        border: 2px solid black;
+        margin: 10px;
+        opacity: 1;
+      }
+      .on {
+        border-color: red;
+        opacity: 0.33;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <p :class="{text: true, on: text1}" 
+        @click="clickedText('red')">첫번째 글입니다.</p>
+      <p :class="{text: true, on: text2}"  
+        @click="clickedText('green')">두번째 글입니다.</p>
+      <p :class="{text: true, on: text3}"  
+        @click="clickedText('blue')">세번째 글입니다.</p>
+    </div>
+    <script>
+      Vue.createApp({
+        data () {
+          return {
+            text1: false,
+            text2: false,
+            text3: false,
+          }
+        },
+        methods: {
+          clickedText(color) {
+            if (color === 'red') {
+              this.text1 = true;
+            } else if (color === 'green') {
+              this.text2 = true;
+            } else if (color === 'blue') {
+              this.text3 = true;
+            }
+          },
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>
