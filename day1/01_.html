@@ -9,20 +9,28 @@
     <div id="app">
       <input type="text" v-model="age"/>
       <h1>저는 {{ age < 40 ? '청년' : '중년'}}입니다.</h1>
-      <p v-bind:title="text">{{ aboutMe }}</p>
+      <h1 v-once>저는 {{ age < 40 ? '청년' : '중년'}}입니다.</h1>
+      <p v-bind="object">{{ aboutMe }}</p>
+      <div v-html="content"></div>
+      <button :disabled="여부">확인버튼</button>
       <a href="" v-on:click.prevent="addAge">나이 증가</a>
     </div>
+
     <script>
       const instance = Vue.createApp({
-        // template: ` 
-        // <h1>저는 {{ age }}살 입니다.</h1>
-        // <input type="text" v-model="age"/>
-        // <button v-on:click="addAge">나이 증가</button>
-        // `,
         data () { 
           return {
+            object: {
+              id: 'juhyeong',
+              class: 'juhyeong',
+              style: 'color: green;',
+            },
+            여부: true,
             age: 20,
+            att: 'title',
             text: '오늘은 흐린 날씨다',
+            src: '../img/a.img',
+            content: '<strong>하하</strong>',
           } 
         },
         computed: {
@@ -32,6 +40,7 @@
         },
         methods: {
           addAge() {
+            console.log(this.age);
             this.age++;
           }
         },
