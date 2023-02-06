@@ -1,36 +1,31 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <style>
-      input {
-        border: 4px solid red;
-      }
-      p {
-        /* display: none; */
-        /* visibility: hidden */
-      }
-    </style>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
   </head>
   <body>
-      <input type="text">
-      <button>OK</button>
-      <p>Hello, World</p>
-  <script>
-    const body = document.querySelector('body');
-    const input = document.querySelector('input');
-    const button = document.querySelector('button');
-    const p = document.querySelector('p');
-    const new_p = document.createElement('div');
-    console.dir(new_p);
-    body.insertBefore(new_p, input);
-
-    p.textContent = 'Hungry spirit';
-    button.addEventListener('click',buttonClick);
-    input.style.border = '2px solid red';
-
-    function buttonClick() {
-      window.alert('clicked!'); // callback function
-      p.textContent = input.value;
-    }
-  </script>
+    <div id="app">
+      <h1>저는 {{ age }}살 입니다.</h1>
+      <input type="text" v-model="age"/>
+      <button v-on:click="addAge">나이 증가</button>
+    </div>
+    <script>
+      const instance = Vue.createApp({
+        data () { 
+          return {
+            age: 20,
+          } 
+        },
+        methods: {
+          addAge() {
+            this.age++;
+          }
+        }
+      });
+      console.log(instance);
+      instance.mount('#app');
+    </script>
   </body>
 </html>
