@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/vue@next"></script>
+  <style>
+    div {
+      border: 2px solid red;
+    }
+    p {
+      border: 2px solid blue;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button @click="decrease($event, myNum)">감소</button>
+    <button @click.once="(event) => {increase(myNum, event)}">증가</button>
+    <div @click="increase(20)">
+      <p @click.stop="some">결과: {{number}}</p>
+    </div>
+  </div>
+
+  <script>
+    const instance = Vue.createApp({
+      data () {
+        return {
+          myNum: 13,
+          number: 100,
+        }
+      },
+      methods: {
+        increase(num, event) {
+          this.number += num;
+          // console.log(event.target);
+        },
+        decrease(event, num) {
+          this.number -= num;
+          console.log(event.target);
+        },
+        some(event) {
+          console.log('some');
+        },
+      },
+    }).mount('#app')
+  </script>
+</body>
+</html>
