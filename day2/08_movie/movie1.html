@@ -10,12 +10,13 @@
 </head>
 <body>
   <div class="movie">
-    <a href="" class="btn" @click.prevent="sortByTicket">예매순</a>
-    <a href="" class="btn" @click.prevent="sortByRate">평점순</a>
-    <a href="" class="btn" @click.prevent="sortByDate">개봉일순</a>
-    <a href="" class="btn" @click.prevent="sortByWeek">주말관객순</a>
-    <a href="" class="btn" @click.prevent="sortBySale">다운로드순</a>
-
+    <ul class="tab">
+      <li :class="{on: true}"><a href="" @click.prevent="sortByTicket">예매순</a></li>
+      <li :class="{on: false}"><a href="" @click.prevent="sortByRate">평점순</a></li>
+      <li :class="{on: false}"><a href="" @click.prevent="sortByDate">개봉일순</a></li>
+      <li :class="{on: false}"><a href="" @click.prevent="sortByWeek">주말관객순</a></li>
+      <li :class="{on: false}"><a href="" @click.prevent="sortBySale">다운로드순</a></li>
+    </ul>
     <ol class="list" v-for="movie, index in movies">
       <li>
           <a href="">
