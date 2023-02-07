@@ -10,16 +10,38 @@
 </head>
 <body>
   <div class="movie">
+    <a href="" class="btn" @click.prevent="sortByTicket">예매순</a>
+    <a href="" class="btn" @click.prevent="sortByRate">평점순</a>
+    <a href="" class="btn" @click.prevent="sortByDate">개봉일순</a>
+    <a href="" class="btn" @click.prevent="sortByWeek">주말관객순</a>
+    <a href="" class="btn" @click.prevent="sortBySale">다운로드순</a>
+
     <ol class="list" v-for="movie, index in movies">
       <li>
           <a href="">
             <h4 class="hide">{{movie.name}}</h4>
-            <span class="hide rate rate20">{{movie.rate[1]}}</span>
+            <span class="hide rate" :class="'rate'+movie.rate[0]">{{movie.rate[1]}}</span>
             <strong class="rank">{{index + 1}}</strong>
             <img class="poster" :src=movie.src :alt=movie.name />
-            <span class="desc">
+            <span v-if="sort===1" class="desc">
                 <i class="star"><b :style="'width:'+movie.score*10+'%'"></b></i>
                 <em class="score">{{movie.score}}</em>
+            </span>
+            <span v-else-if="sort===0" class="desc">
+              <i class="reserv_title">예매율</i>
+              <em class="reserv_num">{{movie.ticketing}}</em>
+            </span>
+            <span v-else-if="sort===2" class="desc">
+              <i class="open_title">개봉일</i>
+              <em class="open_num">{{movie.openDate}}</em>
+            </span>
+            <span v-else-if="sort===3" class="desc">
+              <i class="week_title">주말관객</i>
+              <em class="week_num">{{movie.week}}</em>
+            </span>
+            <span v-else-if="sort===4" class="desc">
+              <i class="sale_title">판매율</i>
+              <em class="sale_num">{{movie.sale}}</em>
             </span>
           </a>
       </li>
@@ -34,7 +56,8 @@
     
     const app = Vue.createApp({
       data() {
-        return {      
+        return {   
+          sort: 1,   
           rateMatch : {
             '0': '전체관람가',
             '12': '12세이상 관람가',
@@ -127,8 +150,11 @@
         }
       },
       created() {
-        for (let i=0; i< this.movies.length; i++) {
-          this.movies[i].rate = [this.movies[i].rate, this.rateMatch[this.movies[i].rate]]
+        // for (let i=0; i< this.movies.length; i++) {
+        //   this.movies[i].rate = [this.movies[i].rate, this.rateMatch[this.movies[i].rate]]
+        // }
+        for (movie of this.movies) {
+          movie.rate = [movie.rate, this.rateMatch[movie.rate]]
         }
         this.movies.sort(function(a,b) {
           return b.score- a.score;
@@ -139,16 +165,31 @@
           this.movies.sort(function(a,b) {
             return b.score- a.score;
           })
+          this.sort = 1;
         },
         sortByTicket() {
           this.movies.sort(function(a,b) {
             return b.ticketing- a.ticketing;
           })
+          this.sort = 0;
         },
         sortByDate() {
           this.movies.sort(function(a,b) {
             return b.openDate- a.openDate;
           })
+          this.sort = 2;
+        },
+        sortByWeek() {
+          this.movies.sort(function(a,b) {
+            return b.week- a.week;
+          })
+          this.sort = 3;
+        },
+        sortBySale() {
+          this.movies.sort(function(a,b) {
+            return b.sale- a.sale;
+          })
+          this.sort = 4;
         },
       },
     });
