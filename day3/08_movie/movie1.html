@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/movie1.css">
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+  <div class="movie" id="app">
+    <ul class="tab" @click.prevent="setContext">
+      <li :class="{on: text1}" @click.prevent="setCrrTab('예매순')"><a href="">예매순</a></li>
+      <li :class="{on: text2}" @click.prevent="setCrrTab('평점순')"><a href="">평점순</a></li>
+      <li :class="{on: text3}" @click.prevent="setCrrTab('개봉일순')"><a href="">개봉일순</a></li>
+      <li :class="{on: text4}" @click.prevent="setCrrTab('주말관객순')"><a href="">주말관객순</a></li>
+      <li :class="{on: text5}" @click.prevent="setCrrTab('다운로드순')"><a href="">다운로드순</a></li>
+    </ul>
+    <ol class="list" v-for="movie, index in movies">
+      <li>
+          <a href="">
+            <h4 class="hide">{{movie.name}}</h4>
+            <span class="hide rate" :class="'rate'+movie.rate[0]">{{movie.rate[1]}}</span>
+            <strong class="rank">{{index + 1}}</strong>
+            <img class="poster" :src=movie.src :alt=movie.name />
+            <span v-if="moveContext==='평점순'" class="desc">
+                <i class="star"><b :style="'width:'+movie.score*10+'%'"></b></i>
+                <em class="score">{{movie.score}}</em>
+            </span>
+            <span v-else-if="moveContext==='예매순'" class="desc">
+              <i class="reserv_title">예매율</i>
+              <em class="reserv_num">{{movie.ticketing}}</em>
+            </span>
+            <span v-else-if="moveContext==='개봉일순'" class="desc">
+              <i class="open_title">개봉일</i>
+              <em class="open_num">{{movie.openDate}}</em>
+            </span>
+            <span v-else-if="moveContext==='주말관객순'" class="desc">
+              <i class="week_title">주말관객</i>
+              <em class="week_num">{{movie.week}}</em>
+            </span>
+            <span v-else-if="moveContext==='다운로드순'" class="desc">
+              <i class="sale_title">판매율</i>
+              <em class="sale_num">{{movie.sale}}</em>
+            </span>
+          </a>
+      </li>
+    </ol>
+  </div>
+
+  <script>
+    // 아래 데이터를 활용하세요.
+    // 1. create되면 rateMatch 테이블을 이용해 movies에 rate항목을 rate: [12, '12세이상 관람가'] 형태로 만든다.
+    // 2. 평점(score) 순으로 데이터를 소팅한다.
+    // 3. for 문을 돌면서 각 데이터를 넣어 랜더링 하도록 디렉티브 작업을 한다.
+    
+    const app = Vue.createApp({
+      data() {
+        return {  
+          text1: true,
+          text2: false,
+          text3: false,
+          text4: false,
+          text5: false,
+          moveContext: '예매순', 
+          rateMatch : {
+            '0': '전체관람가',
+            '12': '12세이상 관람가',
+            '15': '15세이상 관람가',
+            '19': '19세이상 관람가',
+            '20': '청소년관람불가',
+          },
+          movies: [
+            {
+              name: '남애의 여름밤',
+              src: 'images/mov_1.jpg',
+              rate: 15,
+              score: 9.43, //평점
+              sale: 11.7,  //판매율
+              openDate: 8.26,  //개봉일
+              ticketing: 11.79, //예매율
+              week: 8777, //주말관객
+            },
+            {
+              name: '시크릿 가든',
+              src: 'images/mov_2.jpg',
+              rate: 0,
+              score: 8.13,
+              sale: 7.7,  //판매율
+              openDate: 9.3,  //개봉일
+              ticketing: 20.66,
+              week: 2000
+            },
+            {
+              name: '반도',
+              src: 'images/mov_3.jpg',
+              rate: 15,
+              score: 8.54,
+              sale: 7.7,
+              openDate: 9.3,
+              ticketing: 9.79,
+              week: 23327
+            },
+            {
+              name: '강철비2',
+              src: 'images/mov_4.jpg',
+              rate: 19,
+              score: 7.43,
+              sale: 7.7,
+              openDate: 9.7,
+              ticketing: 8.6,
+              week: 23421
+            },
+            {
+              name: '신혼여행 허리케인',
+              src: 'images/mov_5.jpg',
+              rate: 12,
+              score: 6.2,
+              sale: 10.7,
+              openDate: 8.17,
+              ticketing: 2.11,
+              week: 3213
+            },
+            {
+              name: '테넷',
+              src: 'images/mov_6.jpg',
+              rate: 19,
+              score: 7.12,
+              sale: 9.11,
+              openDate: 11.17,
+              ticketing: 3.21,
+              week: 3213
+            },
+            {
+              name: '오케이 마담',
+              src: 'images/mov_7.jpg',
+              rate: 20,
+              score: 9.43,
+              sale: 9.11,
+              openDate: 9.1,
+              ticketing: 3.79,
+              week: 2277
+            },
+            {
+              name: '다만 악에서 구하소서',
+              src: 'images/mov_8.jpg',
+              rate: 20,
+              score: 8.9,
+              sale: 8.8,
+              openDate: 8.21,
+              ticketing: 12.79,
+              week: 83777
+            }
+          ]
+        }
+      },
+      created() {
+        for (movie of this.movies) {
+          movie.rate = [movie.rate, this.rateMatch[movie.rate]]
+        }
+        this.movies.sort(function(a,b) {
+          return b.ticketing- a.ticketing;
+        })
+      },
+      watch: {
+        moveContext(newCxt, oldCxt) {
+          switch (newCxt) {
+            case '예매순':
+              this.movies.sort(function(a,b) {
+                return b.ticketing- a.ticketing;
+              })
+              break;
+            case '평점순':
+              this.movies.sort(function(a,b) {
+                return b.score- a.score;
+              })
+              break;
+            case '개봉일순':
+              this.movies.sort(function(a,b) {
+                return b.openDate- a.openDate;
+              })
+              break;
+            case '주말관객순':
+              this.movies.sort(function(a,b) {
+                return b.week- a.week;
+              })
+              break;
+            case '다운로드순':
+              this.movies.sort(function(a,b) {
+                return b.sale- a.sale;
+              })
+              break;
+          }
+        },
+      },
+      methods: {
+        setContext(context) {
+          this.moveContext = event.target.textContent;
+        },
+        setCrrTab(lielem) {
+          this.text1 = false;
+          this.text2 = false;
+          this.text3 = false;
+          this.text4 = false;
+          this.text5 = false;
+
+          switch (lielem) { 
+            case '예매순':
+              this.text1 = !this.text1;
+              break; 
+            case '평점순':
+              this.text2 = !this.text2;
+              break; 
+            case '개봉일순':
+              this.text3 = !this.text3;
+              break; 
+            case '주말관객순':
+              this.text4 = !this.text4;
+              break; 
+            case '다운로드순':
+              this.text5 = !this.text5;
+              break; 
+          }
+        },
+      },
+    });
+    app.mount('#app');
+  </script>
+</body>
+</html>
