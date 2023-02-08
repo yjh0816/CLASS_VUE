@@ -10,12 +10,12 @@
 </head>
 <body>
   <div class="movie" id="app">
-    <ul class="tab" @click.prevent="setContext">
-      <li :class="{on: text1}" @click.prevent="setCrrTab('예매순')"><a href="">예매순</a></li>
-      <li :class="{on: text2}" @click.prevent="setCrrTab('평점순')"><a href="">평점순</a></li>
-      <li :class="{on: text3}" @click.prevent="setCrrTab('개봉일순')"><a href="">개봉일순</a></li>
-      <li :class="{on: text4}" @click.prevent="setCrrTab('주말관객순')"><a href="">주말관객순</a></li>
-      <li :class="{on: text5}" @click.prevent="setCrrTab('다운로드순')"><a href="">다운로드순</a></li>
+    <ul class="tab" ref="tab" @click.prevent="setContext">
+      <li class="on" @click.prevent="setCrrTab('예매순')"><a href="">예매순</a></li>
+      <li><a href="">평점순</a></li>
+      <li><a href="">개봉일순</a></li>
+      <li><a href="">주말관객순</a></li>
+      <li><a href="">다운로드순</a></li>
     </ul>
     <ol class="list" v-for="movie, index in movies">
       <li>
@@ -58,11 +58,6 @@
     const app = Vue.createApp({
       data() {
         return {  
-          text1: true,
-          text2: false,
-          text3: false,
-          text4: false,
-          text5: false,
           moveContext: '예매순', 
           rateMatch : {
             '0': '전체관람가',
@@ -159,69 +154,50 @@
         for (movie of this.movies) {
           movie.rate = [movie.rate, this.rateMatch[movie.rate]]
         }
-        this.movies.sort(function(a,b) {
-          return b.ticketing- a.ticketing;
-        })
+        this.setOrder('score');
       },
       watch: {
         moveContext(newCxt, oldCxt) {
           switch (newCxt) {
             case '예매순':
-              this.movies.sort(function(a,b) {
-                return b.ticketing- a.ticketing;
-              })
+              this.setOrder('ticketing');
               break;
             case '평점순':
-              this.movies.sort(function(a,b) {
-                return b.score- a.score;
-              })
+              this.setOrder('score');
               break;
             case '개봉일순':
-              this.movies.sort(function(a,b) {
-                return b.openDate- a.openDate;
-              })
+              this.setOrder('openDate');
               break;
             case '주말관객순':
-              this.movies.sort(function(a,b) {
-                return b.week- a.week;
-              })
+              this.setOrder('week');
               break;
             case '다운로드순':
-              this.movies.sort(function(a,b) {
-                return b.sale- a.sale;
-              })
+              this.setOrder('sale');
               break;
           }
         },
       },
-      methods: {
-        setContext(context) {
-          this.moveContext = event.target.textContent;
-        },
-        setCrrTab(lielem) {
-          this.text1 = false;
-          this.text2 = false;
-          this.text3 = false;
-          this.text4 = false;
-          this.text5 = false;
-
-          switch (lielem) { 
-            case '예매순':
-              this.text1 = !this.text1;
-              break; 
-            case '평점순':
-              this.text2 = !this.text2;
-              break; 
-            case '개봉일순':
-              this.text3 = !this.text3;
-              break; 
-            case '주말관객순':
-              this.text4 = !this.text4;
-              break; 
-            case '다운로드순':
-              this.text5 = !this.text5;
-              break; 
+      mounted() {
+        this.$refs.tab.querySelectorAll('li').forEach((item) => {
+          if (item.firstChild.textContent === this.moveContext) {
+            this.setCrrTab(item);
           }
+        })
+      },
+      methods: {
+        setOrder(cxt) {
+          this.movies.sort((a,b) => b[cxt] - a[cxt])
+        },
+        setContext() {
+          if (event.target.tagName !== 'A') return;
+          this.moveContext = event.target.textContent;
+          this.setCrrTab(event.target.parentNode);
+        },
+        setCrrTab(liElem) {
+          this.$refs.tab.querySelectorAll('li').forEach(element => {
+            element.classList.remove('on');
+          });
+          liElem.classList.add('on');
         },
       },
     });
