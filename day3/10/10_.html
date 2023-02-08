@@ -20,16 +20,16 @@
 </head>
 <body>
   <div id="app">
-    <h1>Sales Product({{count}}) - {{totalPrice}}원</h1><br>
+    <h1>Sales Product({{inCart.length}}) - {{totalPrice}}원</h1><br>
     <h3>구입목록</h3>
-    <ul v-for="item,i in cart">
-      <br><li>{{item.title}} {{item.price}} <a href="" @click.prevent="deleteWork(item, i)">삭제</a></li><br><hr>
+    <ul v-for="item,i in inCart" :key="item.title">
+      <br><li>{{item.title}} {{item.price}} <a href="" @click.prevent="delCart(item, i)">삭제</a></li><br><hr>
     </ul>
     <ul class="list">
       <product-list 
         :chips-data="chips" 
         like=10
-        @add-item="addWork"
+        @add-item="addCart"
       ></product-list>
     </ul>
   </div>
@@ -64,9 +64,7 @@
     const app = Vue.createApp({
       data() {
         return {
-          count: 0,
-          totalPrice: 0,
-          cart: [],
+          inCart: [],
           chips:[{
               img:`images/mango.jpg`,
               title:`자연그대로 망고칩`,
@@ -89,16 +87,21 @@
         }
       },
       components: {'product-list': productList},
-      methods: {
-        addWork(idx) {
-          this.totalPrice += this.chips[idx].price;
-          this.count++;
-          this.cart.push(this.chips[idx]);
+      computed: {
+        totalPrice() {
+          let result = 0;
+          this.inCart.forEach(item => {
+            result += item.price;
+          });
+          return result;
         },
-        deleteWork(item, idx) {
-          this.totalPrice -= item.price;
-          this.count--;
-          this.cart.splice(idx,1);
+      },
+      methods: {
+        addCart(idx) {
+          this.inCart.push(this.chips[idx]);
+        },
+        delCart(item, idx) {
+          this.inCart.splice(idx,1);
         },
       },
     });
