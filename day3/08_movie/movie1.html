@@ -59,6 +59,13 @@
       data() {
         return {  
           moveContext: '예매순', 
+          menuMatch: {
+            예매순: 'ticketing',
+            평점순: 'score',
+            개봉일순: 'openDate',
+            주말관객순: 'week',
+            다운로드순: 'sale',
+          },
           rateMatch : {
             '0': '전체관람가',
             '12': '12세이상 관람가',
@@ -150,54 +157,36 @@
           ]
         }
       },
-      created() {
+      watch: {
+        moveContext(crr) {
+          this.setOrder(this.menuMatch[crr]);
+          this.setCrrTab(crr);
+        }
+      },
+      mounted() {
+        this.setCrrTab(this.moveContext);
         for (movie of this.movies) {
           movie.rate = [movie.rate, this.rateMatch[movie.rate]]
         }
-        this.setOrder('score');
-      },
-      watch: {
-        moveContext(newCxt, oldCxt) {
-          switch (newCxt) {
-            case '예매순':
-              this.setOrder('ticketing');
-              break;
-            case '평점순':
-              this.setOrder('score');
-              break;
-            case '개봉일순':
-              this.setOrder('openDate');
-              break;
-            case '주말관객순':
-              this.setOrder('week');
-              break;
-            case '다운로드순':
-              this.setOrder('sale');
-              break;
-          }
-        },
-      },
-      mounted() {
-        this.$refs.tab.querySelectorAll('li').forEach((item) => {
-          if (item.firstChild.textContent === this.moveContext) {
-            this.setCrrTab(item);
-          }
-        })
+        this.setOrder(this.moveContext);
       },
       methods: {
         setOrder(cxt) {
           this.movies.sort((a,b) => b[cxt] - a[cxt])
         },
-        setContext() {
+        setContext(event) {
           if (event.target.tagName !== 'A') return;
           this.moveContext = event.target.textContent;
-          this.setCrrTab(event.target.parentNode);
         },
-        setCrrTab(liElem) {
+        setCrrTab(crr) {
           this.$refs.tab.querySelectorAll('li').forEach(element => {
             element.classList.remove('on');
           });
-          liElem.classList.add('on');
+          this.$refs.tab.querySelectorAll('a').forEach(element => {
+            if (element.textContent === crr) {
+              element.parentNode.classList.add('on');
+            }
+          });
         },
       },
     });
