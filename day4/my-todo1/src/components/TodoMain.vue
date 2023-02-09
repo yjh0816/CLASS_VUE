@@ -4,7 +4,7 @@
     <main>
       <div class="todos">
         <div class="write">
-          <input type="text" v-model="addItemText"/>
+          <input type="text" v-model="addItemText" @keyup.enter="addItem"/>
           <button class="btn add" @click.prevent="addItem">Add</button>
         </div>
         <ul class="list" v-for="todo,i in todos" :key="i">
@@ -45,6 +45,7 @@ export default {
         text: this.addItemText,
         state: 'yet'
       })
+      this.addItemText = ''
     },
   },
 }
