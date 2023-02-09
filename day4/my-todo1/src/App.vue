@@ -6,8 +6,6 @@
 
 <script>
 import TodoMain from './components/TodoMain.vue'
-// 전주비빔밥&계란후라이/아욱된장국/메밀전병/청포묵김가루무침/돌나물겉절이/배추김치
-// 고깃집철판볶음밥/온메밀소바/수제감자치즈고로케&케첩/산고추지/깍두기
 export default {
   name: 'App',
   components: {
