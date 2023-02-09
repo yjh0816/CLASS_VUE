@@ -4,12 +4,18 @@
     <main>
       <div class="todos">
         <div class="write">
-          <input type="text" v-model="addItemText" @keyup.enter="addItem"/>
+          <input 
+            type="text" 
+            v-model="addItemText" 
+            @keyup.enter="addItem"
+            ref="writeArea"/>
           <button class="btn add" @click.prevent="addItem">Add</button>
         </div>
         <ul class="list" v-for="todo,i in todos" :key="i">
           <li>
-            <i class="fa-check-square" :class="(todo.state==='yet' ? 'far':'fas')"></i>
+            <i 
+              @click="checkItem(i)"
+              class="fa-check-square" :class="(todo.state==='yet' ? 'far':'fas')"></i>
             <span>
               {{ todo.text }}
               <b>
@@ -47,7 +53,13 @@ export default {
       })
       this.addItemText = ''
     },
+    checkItem(idx) {
+      this.todos[idx].state = this.todos[idx].state === 'yet' ? 'done' : 'yet';
+    },
   },
+  mounted() {
+    this.$refs.writeArea.focus();
+  }
 }
 </script>
 
