@@ -1,5 +1,5 @@
-reated by https://www.toptal.com/developers/gitignore/api/macos,windows,vim,visualstudiocode,vuejs
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,vim,visualstudiocode,vuejs
+reated by https://www.toptal.com/developers/gitignore/api/macos,windows,vim,visualstudiocode,vuejs,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,vim,visualstudiocode,vuejs,firebase
 
 ### macOS ###
 # General
@@ -108,4 +108,13 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,windows,vim,visualstudiocode,vuejs
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
+
+# End of https://www.toptal.com/developers/gitignore/api/macos,windows,vim,visualstudiocode,vuejs,firebase
