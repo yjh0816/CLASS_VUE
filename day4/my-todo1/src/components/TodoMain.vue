@@ -1,6 +1,21 @@
 <template>
   <div class="page">
-    <header><h1>Vue Fire todo1</h1></header>
+    <header>
+      <h1>
+        Vue Fire todo1
+        <span class="pie">
+          <svg viewBox="0 0 64 64">
+          <circle class="pie" r="32" cx="32" cy="32" style="stroke-width: 64;"></circle>
+          <circle class="slice" r="32" cx="32" cy="32" 
+            :style=" {
+              strokeWidth: 64,
+              strokeDasharray: totalTodo + ', 201',
+              transition: 'all 0.2s linear',
+            }"></circle>
+         </svg>
+        </span>
+      </h1>
+    </header>
     <main>
       <div class="todos">
         <transition name="fade">
@@ -12,7 +27,7 @@
               ref="writeArea"/>
             <button class="btn add" @click.prevent="addItem">Add</button>
           </div>
-          <div class="write edit" v-else key="edit"><!-- 수정 -->
+          <div class="write edit" v-else key="edit"> <!-- 수정 -->
             <input 
               type="text" 
               v-model="editItemText" 
@@ -53,25 +68,36 @@ export default {
       todos:[]
     }
   },
+  computed: {
+    totalTodo() {
+      let totalNum = 0;
+      this.todos.forEach(item => {
+        if (item.state === 'done') {totalNum++;}
+      });
+      return (totalNum / this.todos.length) * 201; 
+    }
+  },
   methods: {
     addItem() {
       if (!this.addItemText) {return;}
       db.collection('todos').add({
         text: this.addItemText,
-        state: 'yet'
+        state: 'yet',
+        createdAt: new Date(),
       }).then(sn => {
         db.collection('todos').doc(sn.id).update({
           id: sn.id
         })
       });
-      // this.todos.push({
-      //   text: this.addItemText,
-      //   state: 'yet'
-      // })
       this.addItemText = '';
     },
     checkItem(idx) {
-      this.todos[idx].state = this.todos[idx].state === 'yet' ? 'done' : 'yet';
+      let flag = this.todos[idx].state === 'yet' ? 'done' : 'yet';
+      db.collection('todos')
+        .doc(this.todos[idx].id)
+          .update({
+            state: flag
+          });
     },
     editShow(idx) {
       this.crrEditText = idx,
@@ -81,7 +107,6 @@ export default {
     },
     editSave() {
       if (!this.editItemText) {return;}
-      // this.todos[this.crrEditText].text = this.editItemText;
       db.collection('todos')
         .doc(this.todos[this.crrEditText].id)
           .update({
@@ -92,21 +117,11 @@ export default {
       this.$refs.list.children[this.crrEditText].className ='';
     },
     delItem(idx) {
-      // this.todos.splice(idx, 1);
       db.collection('todos').doc(this.todos[idx].id).delete();
     },
   },
-  mounted() {
-    this.$refs.writeArea.focus();
-    db.collection('todos').get().then((result) => {
-      result.forEach((doc)=>{
-          console.log(doc.data())
-          this.todos.push(doc.data());
-      })
-    });
-  },
   firestore: {
-    todos: db.collection('todos')
+    todos: db.collection('todos').orderBy('createdAt','desc')
   }
 }
 </script>
